@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css"
+          integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h1 class="text-center">注册</h1>
+                <form id="myform">
+                    {% csrf_token %}
+                    {% for form in form_obj %}
+                        <div class="form-group">
+                            <label for="{{ form.auto_id }}">{{ form.label }}</label>
+                            {{ form }}
+                            <span style="color: red" class="pull-right"></span>
+                        </div>
+                    {% endfor %}
+                    <div class="form-group">
+                        <label for="myfile">请设置你的头像
+                            {% load static %}
+                            <img src="{% static 'img/default.png' %}" id="myimg" alt="" width="100" style="margin-left: 15px">
+                        </label>
+                        <input type="file" id="myfile" name="avatar" style="display: none">
+                    </div>
+                    <input type="button" class="btn btn-primary pull-right" value="注册" id="id_commit">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#myfile').change(function (){    // 只要内容变化了就会触发
+            // 文件阅读器对象
+            // 1.生成一个文件阅读器对象
+            let myFileReader = new FileReader();
+            // 2.获取用户上传的头像文件
+            let fileObj = $(this)[0].files[0]
+            // 3.将文件对象交给阅读器对象读取
+            myFileReader.readAsDataURL(fileObj)     // 异步操作   IO操作
+            // 4.利用文件阅读器将文件展示到前端页面  修改src属性
+            // 等待文件阅读器加载完毕之后再执行
+            myFileReader.onload = function (){
+            $('#myimg').attr('src', myFileReader.result)
+            }
+        })
+        $('#id_commit').click(function (){
+            // 发送ajax请求     发送的数据中即包含普通的键值对也包含文件
+            let formDataObj = new FormData();
+            // 1.添加普通的键值对
+            $.each($('#myform').serializeArray(), function (index, obj){
+                formDataObj.append(obj.name, obj.value)
+            });
+            // 2.添加文件数据
+            formDataObj.append('avatar', $('#myfile')[0].files[0])
+            // 3.发送ajax请求
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: formDataObj,
+                // 需要指定两个关键性的参数
+                contentType:false,
+                processData: false,
+
+                success:function (args){
+                    if (args.code==1000){
+                        // 跳转到登录页面
+                        window.location.href = args.url
+                    }
+                    else {
+                        // 将对应的错误提示展示到对应的input框下
+                        // forms组件渲染的标签的id值都是id_字段名
+                        $.each(args.msg, function (index, obj){
+                            let targetId = '#id_' + index;
+                            $(targetId).next().text(obj[0]).parent().addClass('has-error')
+                        })
+                    }
+                }
+            })
+        })
+        // 给所有的input框绑定获取焦点事件
+        $('input').focus(function (){
+            // 将input下的span标签和input外面的div标签修改内容及属性
+            $(this).next().text('').parent().removeClass('has-error')
+        })
+    </script>
+</body>
+</html>

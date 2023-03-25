@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css"
+          integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">校园交流平台</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">主页 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">文章</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多 <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="想搜什么呢...">
+        </div>
+        <button type="submit" class="btn btn-default">搜索</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+          {% if request.user.is_authenticated %}
+                <li><a href="#">{{ request.user.username }}</a></li>
+                <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多操作 <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-toggle="modal" data-target=".bs-example-modal-lg">修改密码</a></li>
+            <li><a href="set/avatar/">修改头像</a></li>
+            <li><a href="/backend/">后台管理</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{% url 'logout' %}">退出登录</a></li>
+          </ul>
+                <!-- Large modal -->
+                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <h1 class="text-center">修改密码</h1>
+                          <div class="row">
+                              <div class="col-md-8 col-md-offset-2">
+                                  <div class="form-group">
+                                      <label for="">用户名</label>
+                                      <input type="text" class="form-control" disabled value="{{ request.user.username }}">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="">原密码</label>
+                                      <input type="password" class="form-control" id="id_old_password">
+                                  </div>
+                                  <div class="form-group"></div>
+                                      <label for="">新密码</label>
+                                      <input type="password" class="form-control" id="id_new_password">
+                                  <div class="form-group">
+                                      <label for="">确认密码</label>
+                                      <input type="password" class="form-control" id="id_confirm_password">
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                    <button id="id_edit" type="button" class="btn btn-primary">修改</button>
+                                        <span style="color: red" id="password_error">
+
+                                        </span>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    </li>
+          {% else %}
+                <li><a href="{% url 'register' %}">注册</a></li>
+                <li><a href="{% url 'login' %}">登录</a></li>
+          {% endif %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+    <div class="container-fluid">
+        <div class="col-md-2">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">广告位招租</h3>
+              </div>
+              <div class="panel-body">
+                价格10元起
+              </div>
+            </div>
+            <div class="panel panel-danger">
+              <div class="panel-heading">
+                <h3 class="panel-title">抽取千万大奖</h3>
+              </div>
+              <div class="panel-body">
+                 联系：110
+              </div>
+            </div>
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3 class="panel-title">联系我们</h3>
+              </div>
+              <div class="panel-body">
+                 steak1452560640@163.com
+              </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {% for article_obj in article_queryset %}
+                <div class="media">
+                    <h4 class="media-heading"><a href="/{{ article_obj.blog.userinfo.username }}/article/{{ article_obj.pk }}/">{{ article_obj.title }}</a></h4>
+                  <div class="media-left">
+                    <a href="#">
+                      <img class="media-object" src="/media/{{ article_obj.blog.userinfo.avatar}}" alt="..." width="80">
+                    </a>
+                  </div>
+                <div class="media-body">
+                {{ article_obj.desc }}
+                </div>
+                    <br>
+                <div>
+                    <span><a href="/{{ article_obj.blog.userinfo.username }}/">{{ article_obj.blog.userinfo.username }} &nbsp</a></span>
+                    <span>发布于 &nbsp</span>
+                    <span>{{ article_obj.create_time|date:'Y-m-d' }} &nbsp</span>
+                    <span><span class="glyphicon glyphicon-comment"></span>评论:({{ article_obj.comment_num }}) &nbsp</span>
+                    <span><span class="glyphicon glyphicon-thumbs-up"></span>点赞:({{ article_obj.up_num }}) &nbsp</span>
+                    <span><span class="glyphicon glyphicon-thumbs-down"></span>点踩:({{ article_obj.down_num }}) &nbsp</span>
+                </div>
+            </div>
+                <hr>
+            {% endfor %}
+        </div>
+        <div class="col-md-2">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">广告位招租</h3>
+              </div>
+              <div class="panel-body">
+                10元起
+              </div>
+            </div>
+            <div class="panel panel-danger">
+              <div class="panel-heading">
+                <h3 class="panel-title">抽取千万大奖</h3>
+              </div>
+              <div class="panel-body">
+                 联系：110
+              </div>
+            </div>
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3 class="panel-title">联系我们</h3>
+              </div>
+              <div class="panel-body">
+                 steak1452560640@163.com
+              </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#id_edit').click(function (){
+            $.ajax({
+                url: '/set_password/',
+                type: 'post',
+                data: {
+                    'old_password': $('#id_old_password').val(),
+                    'new_password': $('#id_new_password').val(),
+                    'confirm_password': $('#id_comfirm_password').val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success:function (args){
+                    if (args.code == 1000){
+                        window.location.reload()
+                    }
+                    else {
+                        $('#password_error').text(args.massage)
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+</html>
